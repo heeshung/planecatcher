@@ -19,7 +19,7 @@ class catcher(Daemon):
 			"ET","HN","LT","VN","GQ","VC","MD","YE","GH","JM","SK","BH","GN","NI","SI",
 			"BN","GW","PA","UZ","AE","LS","DO","UA","SB","KE","TT","BY","PG","LR","SR",
 			"EE","TW","MG","AG","MK","ID","MW","GD","BA","MV","MX","GE","MH","ML","VE",
-			"TJ","CK","MR","RU","AM","AS","MU","US","NE","NA","AZ","NA","ER","KG","CA",
+			"TJ","CK","MR","RU","AM","AS","MU","USMil","NE","NA","AZ","NA","ER","KG","CA",
 			"UG","TM","NZ","QA","IT","FJ","CF","ES","BT","NR","RW","FR","FM","LC","SN",
 			"DE","MN","TO","SC","UK","KZ","KI","SL","AT","PW","VU","SO","BE","AF","SZ",
 			"BG","BD","AR","SD","DK","MM","BR","TZ","FI","KW","CL","TD","GR","LA","EC",
@@ -237,10 +237,14 @@ class catcher(Daemon):
 		"GTH","ECJ","ASP","GAJ","TMC","LTD","CNK","GPD","COL","PRD","DPJ","PJC","JTL","SWG","FWK","ERY","PEG",
 		"JME","WSN","FSY","GRN","CST","TAY","XSR","TFF","GEC","RLI","XLS","BVR","LXJ","MHV","CFG","VLZ","SIO",
 		"LDX","LXG","DSO","ICV","AOJ","ADN","VCG","JAF","LEA","JEF","GMA","IJM","SVW","EXU","GES","VCN","DCS",
-		"MLM","ABW","ANZ","EAU","RCH","PAT","EXS","KNT","CAZ","KCE","EDW","NDR","KFE"]
-		filteredcountries=["USCiv","US"]
+		"MLM","ABW","ANZ","EAU","RCH","PAT","EXS","KNT","CAZ","KCE","EDW","NDR","KFE","KTK","SHE","GLJ","JET",
+		"EAV","PNC","NDL","JCL","AYY","FYL","ULC","FEX","ABP","JDI","TEU","FPG","MJF","EUW","BMW"]
+		filteredcountries=["USCiv","USMil"]
+		filteredhexcodes=["780926","7101e0","0c4146","0aa004","0aa001","0d8137","780979","564795","500141","60698b",
+		"780705","293d7c","0c414f","0c4152","0c414c","0c414b","0c4153","0c4154","0d0aea","5000ce","5000e6","500141",
+		"50012a","50012a","780043","43ec0e"]
 		
-		desiredregs=["N718BA","N747BC","N780BA","N249BA","N367HP","N80991","N851TB","N8050J","N6189Q","N4468N"]
+		desiredregs=["N367HP","N80991","N851TB","N8050J","N6189Q","N4468N"]
 		desiredairlines=["WWW","MPE","BOE","RRR"]
 		desiredhexcodes=["adfdf9","adfdf8","ae1170","ae020d"]
 		
@@ -286,7 +290,7 @@ class catcher(Daemon):
 							desiredtraits=True
 					#filter out countries and common airlines and for flights without numbers
 					if (desiredtraits==False):
-						if ((hexcountry in filteredcountries)==True or (line[30:33] in filteredairlines)==True or any(char.isdigit() for char in line[30:38])==False):
+						if ((hexcountry in filteredcountries)==True or (line[30:33] in filteredairlines)==True or (line[12:18] in filteredhexcodes)==True or any(char.isdigit() for char in line[30:38])==False):
 							process=False
 		
 					
@@ -301,8 +305,8 @@ class catcher(Daemon):
 					if ((line[12:18] in allplanecache)==False):
 						allplanecache.append(line[12:18])
 						orgf = open("/root/planecatcher/archive/"+timestr+"-allflights.dat","a+")
-						#check if flight is blank
-						if (line[30:38].isspace()==True):
+						#check if flight is blank or is sr_icao
+						if (line[30:38].isspace()==True or line[30:38]=='sr_icao"'):
 							if (hasregistration==True):
 								pushmessage = time.strftime("%H:%M:%S")+" "+line[12:18]+" ("+nreg+")"
 							else:
@@ -332,8 +336,8 @@ class catcher(Daemon):
 							planecache.append(line[12:18])
 							orgf = open("/root/planecatcher/archive/"+timestr+"-flights.dat","a+")
 							pushurl = "https://flightaware.com/live/modes/"+line[12:18]+"/redirect"
-							#check if flight is blank
-							if (line[30:38].isspace()==True):
+							#check if flight is blank or is sr_icao
+							if (line[30:38].isspace()==True or line[30:38]=='sr_icao"'):
 								if (hasregistration==True):
 									pushmessage = time.strftime("%H:%M:%S")+" "+line[12:18]+" ("+nreg+")"
 								else:
