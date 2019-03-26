@@ -244,7 +244,7 @@ class catcher(Daemon):
 		"780705","293d7c","0c414f","0c4152","0c414c","0c414b","0c4153","0c4154","0d0aea","5000ce","5000e6","500141",
 		"50012a","50012a","780043","43ec0e"]
 		
-		desiredregs=["N367HP","N80991","N851TB","N8050J","N6189Q","N4468N"]
+		desiredregs=["N367HP","N80991","N851TB","N8050J","N6189Q","N4468N","C-GXII","C-FWTF"]
 		desiredairlines=["WWW","MPE","BOE","RRR"]
 		desiredhexcodes=["adfdf9","adfdf8","ae1170","ae020d"]
 		
