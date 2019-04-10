@@ -239,11 +239,12 @@ class catcher(Daemon):
 		"LDX","LXG","DSO","ICV","AOJ","ADN","VCG","JAF","LEA","JEF","GMA","IJM","SVW","EXU","GES","VCN","DCS",
 		"MLM","ABW","ANZ","EAU","RCH","PAT","EXS","KNT","CAZ","KCE","EDW","NDR","KFE","KTK","SHE","GLJ","JET",
 		"EAV","PNC","NDL","JCL","AYY","FYL","ULC","FEX","ABP","JDI","TEU","FPG","MJF","EUW","BMW","RZO","PBR",
-		"JTS","DCW"]
+		"JTS","DCW","MPH","AHO","DGX","EFF","CLF","IXR","QQE","NOS","CPI","DGX","QAJ","LMJ","TBJ","AAB","GCK"]
 		filteredcountries=["USCiv","USMil"]
 		filteredhexcodes=["780926","7101e0","0c4146","0aa004","0aa001","0d8137","780979","564795","500141","60698b",
 		"780705","293d7c","0c414f","0c4152","0c414c","0c414b","0c4153","0c4154","0d0aea","5000ce","5000e6","500141",
-		"50012a","50012a","780043","43ec0e","7103e8","0ac379","0d823b","5000c0","500155","7c48a2","484349","c012c7"]
+		"50012a","50012a","780043","43ec0e","7103e8","0ac379","0d823b","5000c0","500155","7c48a2","484349","c012c7",
+		"4d21d8","50016b","43eb77","5000f1","0d02f7"]
 		
 		desiredregs=["N367HP","N80991","N851TB","N8050J","N6189Q","N4468N","C-GXII","C-FWTF"]
 		desiredairlines=["WWW","MPE","BOE","RRR"]
