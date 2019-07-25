@@ -284,7 +284,7 @@ class catcher(Daemon):
 		
 					#filter out countries and common airlines and for flights without numbers and flights that are only numbers
 					elif (desiredtraits==False):
-						if ((hexcountry in filteredcountries)==True or (line[30:33] in filteredairlines)==True or any(char.isdigit() for char in line[30:38])==False) or all(char.isalpha() for char in line[30:38]==False):
+						if ((hexcountry in filteredcountries)==True or (line[30:33] in filteredairlines)==True or any(char.isdigit() for char in line[30:38])==False or any(char.isalpha() for char in line[30:38])==False):
 							process=False
 		
 					
