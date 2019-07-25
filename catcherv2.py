@@ -6,7 +6,7 @@
 #Daemon script ported from https://web.archive.org/web/20160305151936/http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/
 
 
-import sys,time,requests
+import sys,time,requests,ConfigParser
 from daemon import Daemon
 
 class catcher(Daemon):
@@ -223,39 +223,29 @@ class catcher(Daemon):
 							return reg
 				return 0
 		
-		
 		searchstr="flight"
-		filteredairlines=["GGT","EDU","PWA","CWG","VET","GJE","ABD","MLN","DRL","REN","AXQ","NEW","NOJ","MMD",
-		"NAX","WGT","EDG","CLU","NJE","NSH","GTI","SDU","WIG","LOF","JIA","GJS","EJA","ICE","YZR","TOM","RSP",
-		"RIX","LJY","JAS","FTH","IFA","SVL","EDC","DCM","ASH","UPS","UAE","AFR","TCX","ACA","SKV","AFL","TSC",
-		"JZA","ROU","UJC","EJM","OPT","CSN","CES","CAL","CCA","EIN","AIC","AUA","BAW","CPA","ELY","EWG","BSK",
-		"ETH","DLH","IBK","NRS","DJT","TAI","POE","IBE","BOS","SAS","SWR","TAP","VIR","WOW","SIA","CJT","NWS",
-		"BOX","PAC","SOO","DHK","BCS","WJA","ARG","AMX","SLI","AEA","ISS","ASL","AZA","ANA","AAR","AVA","ONE",
-		"LRC","AHY","BEL","BWA","CAY","CMP","MSR","ETD","EVA","FIN","CHH","HAL","AIJ","JAL","KLM","KQA","KAL",
-		"KAC","TAM","LAN","LNE","LOT","PAL","QFA","QTR","RJA","RAM","SVA","SAA","SCX","TAE","THY","AUI","AMQ",
-		"UZB","VIV","VOI","VOC","CXA","XLF","CAO","AZQ","NCA","CLX","ICL","XOJ","VJT","WWI","TWY","HRT","TFL",
-		"GTH","ECJ","ASP","GAJ","TMC","LTD","CNK","GPD","COL","PRD","DPJ","PJC","JTL","SWG","FWK","ERY","PEG",
-		"JME","WSN","FSY","GRN","CST","TAY","XSR","TFF","GEC","RLI","XLS","BVR","LXJ","MHV","CFG","VLZ","SIO",
-		"LDX","LXG","DSO","ICV","AOJ","ADN","VCG","JAF","LEA","JEF","GMA","IJM","SVW","EXU","GES","VCN","DCS",
-		"MLM","ABW","ANZ","EAU","RCH","PAT","EXS","KNT","CAZ","KCE","EDW","NDR","KFE","KTK","SHE","GLJ","JET",
-		"EAV","PNC","NDL","JCL","AYY","FYL","ULC","FEX","ABP","JDI","TEU","FPG","MJF","EUW","BMW","RZO","PBR",
-		"JTS","DCW","MPH","AHO","DGX","EFF","CLF","IXR","QQE","NOS","CPI","DGX","QAJ","LMJ","TBJ","AAB","GCK"]
-		filteredcountries=["USCiv","USMil"]
-		filteredhexcodes=["780926","7101e0","0c4146","0aa004","0aa001","0d8137","780979","564795","500141","60698b",
-		"780705","293d7c","0c414f","0c4152","0c414c","0c414b","0c4153","0c4154","0d0aea","5000ce","5000e6","500141",
-		"50012a","50012a","780043","43ec0e","7103e8","0ac379","0d823b","5000c0","500155","7c48a2","484349","c012c7",
-		"4d21d8","50016b","43eb77","5000f1","0d02f7"]
-		
-		desiredregs=["N367HP","N80991","N851TB","N8050J","N6189Q","N4468N","C-GXII","C-FWTF"]
-		desiredairlines=["WWW","MPE","BOE","RRR"]
-		desiredhexcodes=["adfdf9","adfdf8","ae1170","ae020d"]
 		
 		planecache=[]
 		allplanecache=[]
 		dayhold=time.strftime("%Y%m%d")
+		
+		#read config file and parse
+		config=ConfigParser.ConfigParser()
+		config.read('/root/planecatcher/config/airlines.cfg')
+		filteredairlines=config.get('DEFAULT','filteredairlines').replace('\n','').split(',')
+		filteredcountries=config.get('DEFAULT','filteredcountries').replace('\n','').split(',')
+		filteredhexcodes=config.get('DEFAULT','filteredhexcodes').replace('\n','').split(',')
+		desiredregs=config.get('DEFAULT','desiredregs').replace('\n','').split(',')
+		desiredairlines=config.get('DEFAULT','desiredairlines').replace('\n','').split(',')
+		desiredhexcodes=config.get('DEFAULT','desiredhexcodes').replace('\n','').split(',')
+		
 		#startsuccess = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':'Started successfully.','title':'Planecatcher'})
 		while 1:
-			f = open("/run/dump1090-fa/aircraft.json","r")
+			try:
+				f = open("/run/dump1090-fa/aircraft.json","r")
+			#populate f with null value if aircraft.json can't be opened
+			except:
+				continue
 			#iterate through raw lines
 			for line in f:
 				#find lines with flight
@@ -293,7 +283,7 @@ class catcher(Daemon):
 					#filter out specific hex codes first
 					if ((line[12:18] in filteredhexcodes)==True):
 						process=False
-
+		
 					#filter out countries and common airlines and for flights without numbers
 					elif (desiredtraits==False):
 						if ((hexcountry in filteredcountries)==True or (line[30:33] in filteredairlines)==True or any(char.isdigit() for char in line[30:38])==False):
@@ -306,6 +296,15 @@ class catcher(Daemon):
 						planecache=[]
 						allplanecache=[]
 						dayhold=timestr
+						#update airline list from config every day
+						config.read('/root/planecatcher/config/airlines.cfg')
+						filteredairlines=config.get('DEFAULT','filteredairlines').replace('\n','').split(',')
+						filteredcountries=config.get('DEFAULT','filteredcountries').replace('\n','').split(',')
+						filteredhexcodes=config.get('DEFAULT','filteredhexcodes').replace('\n','').split(',')
+						desiredregs=config.get('DEFAULT','desiredregs').replace('\n','').split(',')
+						desiredairlines=config.get('DEFAULT','desiredairlines').replace('\n','').split(',')
+						desiredhexcodes=config.get('DEFAULT','desiredhexcodes').replace('\n','').split(',')
+		
 					
 					#if not in planecache add to unique flights
 					if ((line[12:18] in allplanecache)==False):
@@ -341,7 +340,7 @@ class catcher(Daemon):
 						if ((line[12:18] in planecache)==False):
 							planecache.append(line[12:18])
 							orgf = open("/root/planecatcher/archive/"+timestr+"-flights.dat","a+")
-							pushurl = "https://flightaware.com/live/modes/"+line[12:18]+"/redirect"
+							pushurl = "https://google.com/search?q="+line[12:18]+"+icao"
 							#check if flight is blank or is sr_icao
 							if (line[30:38].isspace()==True or line[30:38]=='sr_icao"'):
 								if (hasregistration==True):
@@ -350,7 +349,7 @@ class catcher(Daemon):
 									pushmessage = time.strftime("%H:%M:%S")+" "+line[12:18]
 								if (hexcountry!="nocountry"):
 									pushmessage+=" ["+hexcountry+"]"
-								hexpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'View on FlightAware','url':pushurl})
+								hexpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl})
 								pushmessage+="\n"
 								orgf.write(pushmessage)
 							else:
@@ -360,7 +359,7 @@ class catcher(Daemon):
 									pushmessage = time.strftime("%H:%M:%S")+" "+line[30:38]+" ("+line[12:18]+")"
 								if (hexcountry!="nocountry"):
 									pushmessage+=" ["+hexcountry+"]"
-								flightpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'View on FlightAware','url':pushurl})
+								flightpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl})
 								pushmessage+="\n"
 								orgf.write(pushmessage)
 							orgf.close()
