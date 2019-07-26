@@ -3,7 +3,6 @@
 #Aircraft registration calculation algorithms ported to Python from https://github.com/openskynetwork/dump1090-hptoa/blob/master/public_html/registrations.js
 #Algorithms licensed under GPL, v2 or later -  Copyright (C) 2012 by Salvatore Sanfilippo <antirez@gmail.com>
 
-#Daemon script ported from https://web.archive.org/web/20160305151936/http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/
 
 
 import sys,time,requests,ConfigParser
@@ -12,19 +11,19 @@ from daemon import Daemon
 class catcher(Daemon):
 	def run(self):
 		def findcountry(hexcode):
-			countries=["USCiv","SE","IR","ZW","GM","CH","IL","MZ","BF","TR","JO","ZA","ST",
-			"YU","LB","EG","DZ","CY","MY","LY","BS","IE","PH","MA","BB","IS","PK","TN",
-			"BZ","LU","SG","BW","CO","MT","LK","BI","CR","MC","SY","CM","CU","SM","CN",
-			"KM","SV","AU","CG","GT","AL","IN","CI","GY","HR","JP","GA","HT","LV","TH",
-			"ET","HN","LT","VN","GQ","VC","MD","YE","GH","JM","SK","BH","GN","NI","SI",
-			"BN","GW","PA","UZ","AE","LS","DO","UA","SB","KE","TT","BY","PG","LR","SR",
-			"EE","TW","MG","AG","MK","ID","MW","GD","BA","MV","MX","GE","MH","ML","VE",
-			"TJ","CK","MR","RU","AM","AS","MU","USMil","NE","NA","AZ","NA","ER","KG","CA",
-			"UG","TM","NZ","QA","IT","FJ","CF","ES","BT","NR","RW","FR","FM","LC","SN",
-			"DE","MN","TO","SC","UK","KZ","KI","SL","AT","PW","VU","SO","BE","AF","SZ",
-			"BG","BD","AR","SD","DK","MM","BR","TZ","FI","KW","CL","TD","GR","LA","EC",
-			"TG","HU","NP","PY","ZM","NO","OM","PE","CD","NL","KH","UY","AO","PL","SA",
-			"BO","BJ","PT","KR","CV","CZ","KP","DJ","RO","IQ"]
+			countries=["United States Civilian","Sweden","Iran","Zimbabwe","Gambia","Switzerland","Israel","Mozambique","Burkina Faso","Turkey","Jordan","South Africa","Sao Tome and Principe",
+			"Yugoslavia","Lebanon","Egypt","Algeria","Cyprus","Malaysia","Libya","Bahamas","Ireland","Philippines","Morocco","Barbados","Iceland","Pakistan","Tunisia",
+			"Belize","Luxembourg","Singapore","Botswana","Colombia","Malta","Sri Lanka","Burundi","Costa Rica","Monaco","Syria","Cameroon","Cuba","San Marino","China",
+			"Comoros","El Salvador","Australia","Congo","Guatemala","Albania","India","Ivory Coast","Guyana","Croatia","Japan","Gabon","Haiti","Latvia","Thailand",
+			"Ethiopia","Honduras","Lithuania","Vietnam","Equatorial Guinea","St Vincent","Moldova","Yemen","Ghana","Jamaica","Slovakia","Bahrain","Guinea","Nicaragua","Slovenia",
+			"Brunei","Guinea-Bissau","Panama","Uzbekistan","United Arab Emirates","Lesotho","Dominican Republic","Ukraine","Solomon Islands","Kenya","Trinidad and Tobago","Belarus","Papua New Guinea","Liberia","Suriname",
+			"Estonia","Taiwan","Madagascar","Antigua and Barbuda","North Macedonia","Indonesia","Malawi","Grenada","Bosnia and Herzegovina","Maldives","Mexico","Georgia","Marshall Islands","Mali","Venezuela",
+			"Tajikistan","Cook Islands","Mauritania","Russia","Armenia","American Samoa","Mauritius","United States Military","Niger","Namibia","Azerbaijan","Nigeria","Eritrea","Kyrgyzstan","Canada",
+			"Uganda","Turkmenistan","New Zealand","Qatar","Italy","Fiji","Central African Republic","Spain","Bhutan","Nauru","Rwanda","France","Micronesia","St Lucia","Senegal",
+			"Germany","Mongolia","Tonga","Seychelles","United Kingdom","Kazakhstan","Kiribati","Sierra Leone","Austria","Palau","Vanuatu","Somalia","Belgium","Afghanistan","Swaziland",
+			"Bulgaria","Bangladesh","Argentina","Sudan","Denmark","Myanmar","Brazil","Tanzania","Finland","Kuwait","Chile","Chad","Greece","Laos","Ecuador",
+			"Togo","Hungary","Nepal","Paraguay","Zambia","Norway","Oman","Peru","Dem Republic of the Congo","Netherlands","Cambodia","Uruguay","Angola","Poland","Saudi Arabia",
+			"Bolivia","Benin","Portugal","South Korea","Cabo Verde","Czech Republic","North Korea","Djibouti","Romania","Iraq"]
 		
 			hexranges=[0xA00000,0xADF7C8,0x4A8000,0x4AFFFF,0x730000,0x737FFF,0x004000,0x0043FF,0x09A000,0x09AFFF,0x4B0000,
 			0x4B7FFF,0x738000,0x73FFFF,0x006000,0x006FFF,0x09C000,0x09CFFF,0x4B8000,0x4BFFFF,0x740000,0x747FFF,0x008000,0x00FFFF,
