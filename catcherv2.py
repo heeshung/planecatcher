@@ -11,14 +11,14 @@ from daemon import Daemon
 class catcher(Daemon):
 	def run(self):
 		def findcountry(hexcode):
-			countries=["United States Civilian","Sweden","Iran","Zimbabwe","Gambia","Switzerland","Israel","Mozambique","Burkina Faso","Turkey","Jordan","South Africa","Sao Tome and Principe",
+			countries=["US Civilian","Sweden","Iran","Zimbabwe","Gambia","Switzerland","Israel","Mozambique","Burkina Faso","Turkey","Jordan","South Africa","Sao Tome and Principe",
 			"Yugoslavia","Lebanon","Egypt","Algeria","Cyprus","Malaysia","Libya","Bahamas","Ireland","Philippines","Morocco","Barbados","Iceland","Pakistan","Tunisia",
 			"Belize","Luxembourg","Singapore","Botswana","Colombia","Malta","Sri Lanka","Burundi","Costa Rica","Monaco","Syria","Cameroon","Cuba","San Marino","China",
 			"Comoros","El Salvador","Australia","Congo","Guatemala","Albania","India","Ivory Coast","Guyana","Croatia","Japan","Gabon","Haiti","Latvia","Thailand",
 			"Ethiopia","Honduras","Lithuania","Vietnam","Equatorial Guinea","St Vincent","Moldova","Yemen","Ghana","Jamaica","Slovakia","Bahrain","Guinea","Nicaragua","Slovenia",
 			"Brunei","Guinea-Bissau","Panama","Uzbekistan","United Arab Emirates","Lesotho","Dominican Republic","Ukraine","Solomon Islands","Kenya","Trinidad and Tobago","Belarus","Papua New Guinea","Liberia","Suriname",
 			"Estonia","Taiwan","Madagascar","Antigua and Barbuda","North Macedonia","Indonesia","Malawi","Grenada","Bosnia and Herzegovina","Maldives","Mexico","Georgia","Marshall Islands","Mali","Venezuela",
-			"Tajikistan","Cook Islands","Mauritania","Russia","Armenia","American Samoa","Mauritius","United States Military","Niger","Namibia","Azerbaijan","Nigeria","Eritrea","Kyrgyzstan","Canada",
+			"Tajikistan","Cook Islands","Mauritania","Russia","Armenia","American Samoa","Mauritius","US Military","Niger","Namibia","Azerbaijan","Nigeria","Eritrea","Kyrgyzstan","Canada",
 			"Uganda","Turkmenistan","New Zealand","Qatar","Italy","Fiji","Central African Republic","Spain","Bhutan","Nauru","Rwanda","France","Micronesia","St Lucia","Senegal",
 			"Germany","Mongolia","Tonga","Seychelles","United Kingdom","Kazakhstan","Kiribati","Sierra Leone","Austria","Palau","Vanuatu","Somalia","Belgium","Afghanistan","Swaziland",
 			"Bulgaria","Bangladesh","Argentina","Sudan","Denmark","Myanmar","Brazil","Tanzania","Finland","Kuwait","Chile","Chad","Greece","Laos","Ecuador",
