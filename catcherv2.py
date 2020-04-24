@@ -347,7 +347,10 @@ class catcher(Daemon):
 									pushmessage = time.strftime("%H:%M:%S")+" "+line[12:18]
 								if (hexcountry!="nocountry"):
 									pushmessage+=" ["+hexcountry+"]"
-								hexpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl})
+								try:
+									hexpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl})
+								except:
+									pass
 								pushmessage+="\n"
 								orgf.write(pushmessage)
 							else:
@@ -357,7 +360,10 @@ class catcher(Daemon):
 									pushmessage = time.strftime("%H:%M:%S")+" "+line[30:38]+" ("+line[12:18]+")"
 								if (hexcountry!="nocountry"):
 									pushmessage+=" ["+hexcountry+"]"
-								flightpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl})
+								try:
+									flightpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl})
+								except:
+									pass
 								pushmessage+="\n"
 								orgf.write(pushmessage)
 							orgf.close()
