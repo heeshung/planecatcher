@@ -348,7 +348,7 @@ class catcher(Daemon):
 								if (hexcountry!="nocountry"):
 									pushmessage+=" ["+hexcountry+"]"
 								try:
-									hexpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl})
+									hexpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl,'device':'pixel4xl'})
 								except:
 									pass
 								pushmessage+="\n"
@@ -361,7 +361,7 @@ class catcher(Daemon):
 								if (hexcountry!="nocountry"):
 									pushmessage+=" ["+hexcountry+"]"
 								try:
-									flightpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl})
+									flightpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl,'device':'pixel4xl'})
 								except:
 									pass
 								pushmessage+="\n"
