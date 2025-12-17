@@ -6,7 +6,7 @@
 #Daemon script ported from https://web.archive.org/web/20160305151936/http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/
 
 
-import sys,time,requests,ConfigParser
+import sys,time,requests,configparser
 from daemon import Daemon
 
 class catcher(Daemon):
@@ -25,7 +25,7 @@ class catcher(Daemon):
 			"Bulgaria","Bangladesh","Argentina","Sudan","Denmark","Myanmar","Brazil","Tanzania","Finland","Kuwait","Chile","Chad","Greece","Laos","Ecuador",
 			"Togo","Hungary","Nepal","Paraguay","Zambia","Norway","Oman","Peru","Dem Republic of the Congo","Netherlands","Cambodia","Uruguay","Angola","Poland","Saudi Arabia",
 			"Bolivia","Benin","Portugal","South Korea","Cabo Verde","Czech Republic","North Korea","Djibouti","Romania","Iraq"]
-		
+
 			hexranges=[0xA00000,0xADF7C8,0x4A8000,0x4AFFFF,0x730000,0x737FFF,0x004000,0x0043FF,0x09A000,0x09AFFF,0x4B0000,
 			0x4B7FFF,0x738000,0x73FFFF,0x006000,0x006FFF,0x09C000,0x09CFFF,0x4B8000,0x4BFFFF,0x740000,0x747FFF,0x008000,0x00FFFF,
 			0x09E000,0x09E3FF,0x4C0000,0x4C7FFF,0x748000,0x74FFFF,0x010000,0x017FFF,0x0A0000,0x0A7FFF,0x4C8000,0x4C83FF,0x750000,
@@ -56,12 +56,12 @@ class catcher(Daemon):
 			0xE90FFF,0x090000,0x090FFF,0x488000,0x48FFFF,0x710000,0x717FFF,0xE94000,0xE94FFF,0x094000,0x0943FF,0x490000,0x497FFF,
 			0x718000,0x71FFFF,0x096000,0x0963FF,0x498000,0x49FFFF,0x720000,0x727FFF,0x098000,0x0983FF,0x4A0000,0x4A7FFF,0x728000,
 			0x72FFFF]
-		
+
 			for a in range(0,len(hexranges),2):
 				if (hexranges[a]<hexcode<hexranges[a+1]):
-					return countries[a/2]
+					return countries[a//2]
 			return "nocountry"
-		
+
 		def hexdecoder(hexcode):
 			setzs=[0x008011,676,26,"ZS-",0,0x00c4b8]
 			setfg=[0x390000,1024,32,"F-G",0,0x396739]
@@ -92,41 +92,41 @@ class catcher(Daemon):
 			setyk=[0x778421,1024,32,"YK-",0,0x77eb5a]
 			setvh=[0x7c0000,1296,36,"VH-",0,0x7c822d]
 			setlv=[0xe01041,4096,64,"LV-",0,0xe1a69a]
-		
-		
+
+
 			mappings=[setzs,setfg,setfh,setdaa,setdab,setdba,setdbb,setdc,setde,setdf,setdg,setdh,setdi,setoo,setcf,setcg,setci,setoy,setoh,
 			setsx,setcs,setyr,settc,setjy,setap,set9v,setyk,setvh,setlv]
-		
+
 			#regrange order: N-Number,RA,CU,HL1,HL2,HL3,JA
 			regrange=[0xa00001,0xadf7c7,0x140000,0x1586a0,0x0b03e8,0x0b07d0,0x71ba00,0x71bf99,0x71c000,0x71c099,0x71c200,0x71c299,0x840001,0x8781cf]
-		
+
 			if (regrange[0] <= hexcode <= regrange[1]):
-		
+
 				alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
-		
+
 				offset = hexcode-10485761
-		
+
 				reg="N"
-		
+
 				dig1=int(offset/101711)+1
 				reg+=str(dig1)
 				offset = offset%101711
-		
+
 				if (offset>600):
 					offset-=601
 					dig2=int(offset/10111)
 					reg+=str(dig2)
 					offset = offset%10111
-		
-		
+
+
 				if (offset>600):
 					offset-=601
 					dig3=int(offset/951)
 					reg+=str(dig3)
 					offset=offset%951
-		
-		
-		
+
+
+
 				if (offset>600):
 					offset-=601
 					dig4=int(offset/35)
@@ -138,8 +138,8 @@ class catcher(Daemon):
 						else:
 							offset-=25
 							reg+=str(int(round(offset)))
-		
-		
+
+
 				elif (offset<=600 and offset >0):
 					offset-=1
 					alphaindex1 = int(offset/25)
@@ -148,9 +148,9 @@ class catcher(Daemon):
 					if (alphaindex2>0):
 						alphaindex2-=1
 						reg+=alphabet[alphaindex2]
-		
+
 				return reg
-		
+
 			elif (regrange[2]<=hexcode<=regrange[3] or regrange[4]<=hexcode<=regrange[5]):
 				if (regrange[2]<=hexcode<=regrange[3]):
 					numpre="RA-"
@@ -162,7 +162,7 @@ class catcher(Daemon):
 					numfirst=1000
 				reg=numpre+str(hexcode-numstart+numfirst)
 				return reg
-		
+
 			elif(regrange[6]<=hexcode<=regrange[11]):
 				if (regrange[6]<=hexcode<=regrange[7]):
 					reg="HL"+str(hex(hexcode-0x71ba00+0x7200))[2:]
@@ -171,31 +171,31 @@ class catcher(Daemon):
 				elif(regrange[10]<=hexcode<=regrange[11]):
 					reg="HL"+str(hex(hexcode-0x71c200+0x8200))[2:]
 				return reg
-		
+
 			elif(regrange[12]<=hexcode<=regrange[13]):
 				limalphabet='ABCDEFGHJKLMNPQRSTUVWXYZ'
 				offset=hexcode-0x840000
 				reg="JA"
-		
+
 				dig1=int(offset/22984)
 				if (dig1<0 or dig1>9):
 					return 0
-		
+
 				reg+=str(dig1)
 				offset=offset%22984
-		
+
 				dig2=int(offset/916)
 				if (dig2<0 or dig2>9):
 					return 0
-		
+
 				reg+=str(dig2)
 				offset=offset%916
-		
+
 				if (offset<340):
 					dig3=int(offset/34)
 					reg+=str(dig3)
 					offset=offset%34
-		
+
 					if (offset<10):
 						return reg+str(offset)
 					else:
@@ -205,7 +205,7 @@ class catcher(Daemon):
 					offset-=340
 					let3=int(offset/24)
 					return reg+limalphabet[let3]+limalphabet[offset%24]
-		
+
 			else:
 				alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 				for a in range(len(mappings)):
@@ -222,15 +222,15 @@ class catcher(Daemon):
 							reg=mappings[a][3]+alphabet[vara]+alphabet[varb]+alphabet[varc]
 							return reg
 				return 0
-		
+
 		searchstr="flight"
-		
+
 		planecache=[]
 		allplanecache=[]
 		dayhold=time.strftime("%Y%m%d")
-		
+
 		#read config file and parse
-		config=ConfigParser.ConfigParser()
+		config=configparser.ConfigParser()
 		config.read('/root/planecatcher/config/airlines.cfg')
 		filteredairlines=config.get('DEFAULT','filteredairlines').replace('\n','').split(',')
 		filteredcountries=config.get('DEFAULT','filteredcountries').replace('\n','').split(',')
@@ -238,7 +238,7 @@ class catcher(Daemon):
 		desiredregs=config.get('DEFAULT','desiredregs').replace('\n','').split(',')
 		desiredairlines=config.get('DEFAULT','desiredairlines').replace('\n','').split(',')
 		desiredhexcodes=config.get('DEFAULT','desiredhexcodes').replace('\n','').split(',')
-		
+
 		while 1:
 			try:
 				f = open("/run/dump1090-fa/aircraft.json","r")
@@ -257,7 +257,6 @@ class catcher(Daemon):
 						hexinput=int(hexrawinput,16)
 					except:
 						continue
-		
 					#find aircraft registration
 					try:
 						nreg=hexdecoder(hexinput)
@@ -281,12 +280,12 @@ class catcher(Daemon):
 					#filter out specific hex codes first
 					if ((line[12:18] in filteredhexcodes)==True):
 						process=False
-		
+
 					#filter out countries and common airlines and for flights without numbers and flights that are only numbers
 					elif (desiredtraits==False):
 						if ((hexcountry in filteredcountries)==True or (line[30:33] in filteredairlines)==True or any(char.isdigit() for char in line[30:38])==False or any(char.isalpha() for char in line[30:38])==False):
 							process=False
-		
+
 					
 					timestr = time.strftime("%Y%m%d")
 					#flush planecache when new day
@@ -302,7 +301,7 @@ class catcher(Daemon):
 						desiredregs=config.get('DEFAULT','desiredregs').replace('\n','').split(',')
 						desiredairlines=config.get('DEFAULT','desiredairlines').replace('\n','').split(',')
 						desiredhexcodes=config.get('DEFAULT','desiredhexcodes').replace('\n','').split(',')
-		
+
 					
 					#if not in planecache add to unique flights
 					if ((line[12:18] in allplanecache)==False):
@@ -328,7 +327,7 @@ class catcher(Daemon):
 							pushmessage+="\n"
 							orgf.write(pushmessage)
 						orgf.close()
-		
+
 					if (process==True):
 						wrf = open("/root/planecatcher/archive/"+timestr+"-raw.dat","a+")
 						wrf.write(line)
@@ -347,10 +346,10 @@ class catcher(Daemon):
 									pushmessage = time.strftime("%H:%M:%S")+" "+line[12:18]
 								if (hexcountry!="nocountry"):
 									pushmessage+=" ["+hexcountry+"]"
-								try:
-									hexpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl,'device':'pixel4xl'})
-								except:
-									pass
+								#try:
+								#	hexpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl,'device':'pixel4xl'})
+								#except:
+								#	pass
 								pushmessage+="\n"
 								orgf.write(pushmessage)
 							else:
@@ -360,10 +359,10 @@ class catcher(Daemon):
 									pushmessage = time.strftime("%H:%M:%S")+" "+line[30:38]+" ("+line[12:18]+")"
 								if (hexcountry!="nocountry"):
 									pushmessage+=" ["+hexcountry+"]"
-								try:
-									flightpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl,'device':'pixel4xl'})
-								except:
-									pass
+								#try:
+								#	flightpush = requests.post('https://api.pushover.net/1/messages.json', data = {'token':'asgznvqc8fus68yzu9gmhhepe23rde','user':'uybm1se7j935kr5cxg8m7yc3gjq61k','message':pushmessage,'title':'PlaneCatcher','priority':'-1','url_title':'Search Google for hex','url':pushurl,'device':'pixel4xl'})
+								#except:
+								#	pass
 								pushmessage+="\n"
 								orgf.write(pushmessage)
 							orgf.close()
@@ -380,9 +379,9 @@ if __name__ == "__main__":
         elif 'restart' == sys.argv[1]:
             daemon.restart()
         else:
-            print "Unknown command"
+            print ("Unknown command")
             sys.exit(2)
         sys.exit(0)
     else:
-        print "usage: %s start|stop|restart" % sys.argv[0]
+        print ("usage: %s start|stop|restart" % sys.argv[0])
         sys.exit(2)
